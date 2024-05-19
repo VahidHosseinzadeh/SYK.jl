@@ -15,32 +15,32 @@ export H
 
 
 "Majorana fermion ψ(K,i) where 2K = N for N fermions (so i=1:N) using PermMatrices"
-    function ψ(K::Int, i::Int)
-        sx = PermMatrix([2, 1], [1 / √2, 1 / √2])
-        sy = PermMatrix([2, 1], [-1im / √2, 1im / √2])
-        sz = PermMatrix([1, 2], [1, -1])
-        if K > 1 && K % 1 == 0
-            if i % 1 == 0 && 1 <= i <= (2 * K) - 2
-                return kron(ψ(K - 1, i), -sz)
-            elseif i == (2 * K) - 1
-                return kron(IMatrix(2^(K - 1)), sx)
-            elseif i == (2 * K)
-                return kron(IMatrix(2^(K - 1)), sy)
-            else
-                print("i = $i out of range!")
-            end
-        elseif K == 1
-            if i == 1
-                return sx
-            elseif i == 2
-                return sy
-            else
-                print("i = $i out of range!")
-            end
+function ψ(K::Int, i::Int)
+    sx = PermMatrix([2, 1], [1 / √2, 1 / √2])
+    sy = PermMatrix([2, 1], [-1im / √2, 1im / √2])
+    sz = PermMatrix([1, 2], [1, -1])
+    if K > 1 && K % 1 == 0
+        if i % 1 == 0 && 1 <= i <= (2 * K) - 2
+            return kron(ψ(K - 1, i), -sz)
+        elseif i == (2 * K) - 1
+            return kron(IMatrix(2^(K - 1)), sx)
+        elseif i == (2 * K)
+            return kron(IMatrix(2^(K - 1)), sy)
         else
-            print("K = $K is out of range!")
+            print("i = $i out of range!")
         end
+    elseif K == 1
+        if i == 1
+            return sx
+        elseif i == 2
+            return sy
+        else
+            print("i = $i out of range!")
+        end
+    else
+        print("K = $K is out of range!")
     end
+end
     
      
     
@@ -72,54 +72,7 @@ end
 
 
 
-### test
-function commutator(op1, op2)
-    return op1 * op2 - op2 * op1
-end
 
-
-function anticommutator(op1, op2)
-    return op1 * op2 + op2 * op1
-end
-
-function CliffordCheck(K)
-    for m in combinations(1:2*K, 2)
-        if anticommutator(ψ(K, m[1]), ψ(K, m[2])) != spzeros(2^K, 2^K)
-            print("this is not a represention of Clifford algebra! m = $m")
-            return false
-        end
-    end
-
-    for i in 1:2*K
-        if anticommutator(ψ(K, i), ψ(K, i)) != ((1 / √2)^2 + (1 / √2)^2) * I
-            print("this is not a represention of Clifford algebra! i = $i ")
-            return false
-        end
-    end
-    return true
-end
-
-
-
-function CliffordCheckGamma(K)
-    for m in combinations(1:2*K, 2)
-        if anticommutator(γ(K, m[1]), γ(K, m[2])) != spzeros(2^K, 2^K)
-            print("this is not a represention of Clifford algebra! m = $m")
-            return false
-        end
-    end
-
-    for i in 1:2*K
-        if anticommutator(γ(K, i), γ(K, i)) != 2 * I
-            print("this is not a represention of Clifford algebra! i = $i ")
-            return false
-        end
-    end
-    return true
-end
-
-
-#### test 
 
 
 
